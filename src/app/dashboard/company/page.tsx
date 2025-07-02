@@ -22,7 +22,7 @@ export default function CompanyDashboard() {
         return;
       }
       if (profile && profile.role !== 'company') {
-        router.push('/dashboard/rep');
+        router.push('/login?message=rep-dashboard-separate');
         return;
       }
     }
@@ -45,10 +45,10 @@ export default function CompanyDashboard() {
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
           <p className="text-gray-600 mb-4">You don't have permission to access this page.</p>
           <button 
-            onClick={() => router.push('/dashboard/rep')}
+            onClick={() => router.push('/login?message=rep-dashboard-separate')}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
-            Go to Rep Dashboard
+            Back to Login
           </button>
         </div>
       </div>

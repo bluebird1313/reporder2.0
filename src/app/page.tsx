@@ -16,7 +16,7 @@ export default function Home() {
         if (profile.role === 'company') {
           router.push('/dashboard/company')
         } else if (profile.role === 'rep') {
-          router.push('/dashboard/rep')
+          router.push('/login?message=rep-dashboard-separate')
         }
       }
     }

@@ -23,6 +23,16 @@ export default function LoginPage() {
 
   const { signIn, signUp, user, profile, loading: authLoading } = useAuth()
   const router = useRouter()
+  
+  // Check for rep dashboard message
+  const [showRepMessage, setShowRepMessage] = useState(false)
+  
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('message') === 'rep-dashboard-separate') {
+      setShowRepMessage(true)
+    }
+  }, [])
 
   // Redirect if already logged in - ONLY redirect based on actual user profile
   useEffect(() => {
@@ -42,7 +52,7 @@ export default function LoginPage() {
         profileRole: profile.role,
         authLoadingDone: !authLoading
       })
-      const redirectPath = profile.role === 'company' ? '/dashboard/company' : '/dashboard/rep'
+      const redirectPath = profile.role === 'company' ? '/dashboard/company' : '/login?message=rep-dashboard-separate'
       console.log('🔄 LOGIN PAGE - Redirecting to:', redirectPath)
       router.push(redirectPath)
     } else if (user && !profile && !authLoading) {
@@ -157,6 +167,16 @@ export default function LoginPage() {
           {success && (
             <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
               {success}
+            </div>
+          )}
+
+          {showRepMessage && (
+            <div className="mb-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded">
+              <h4 className="font-semibold">Rep Dashboard Available Separately</h4>
+              <p className="text-sm mt-1">
+                The rep dashboard is now deployed as a separate application. 
+                Please contact your administrator for access to the new rep dashboard URL.
+              </p>
             </div>
           )}
 
