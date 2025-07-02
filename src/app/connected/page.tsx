@@ -1,12 +1,11 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 export default function Connected() {
   const searchParams = useSearchParams();
-  const shop = searchParams.get('shop');
-  const [isLoading, setIsLoading] = useState(false);
+  const shop = searchParams?.get('shop');
+
 
   const handleViewDashboard = () => {
     // Navigate to main dashboard (to be implemented)

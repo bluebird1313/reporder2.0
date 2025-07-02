@@ -1,8 +1,9 @@
 'use client'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/auth-context'
+import Image from 'next/image'
 import Link from 'next/link'
+import { useAuth } from '@/lib/auth-context'
 
 export default function Home() {
   const { user, profile, loading } = useAuth()
@@ -34,11 +35,14 @@ export default function Home() {
   // Show homepage for non-authenticated users
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      {/* RepOrder Logo */}
+      {/* RepOrder Logo - Optimized with Next.js Image */}
       <div className="mb-8">
-        <img
+        <Image
           src="/reporder-logo.svg"
           alt="RepOrder"
+          width={120}
+          height={80}
+          priority
           className="h-20 w-auto"
         />
       </div>
@@ -55,13 +59,13 @@ export default function Home() {
         <div className="space-x-4">
           <Link 
             href="/login" 
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors duration-200"
           >
             Get Started
           </Link>
           <Link 
             href="/login" 
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded transition-colors duration-200"
           >
             Sign In
           </Link>

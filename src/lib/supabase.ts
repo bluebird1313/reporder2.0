@@ -1,29 +1,15 @@
-import { createClient } from '@supabase/supabase-js'
-import type { Database } from './database.types'
+/**
+ * Main Supabase Client with Auth Helpers
+ * Uses new SSR-compatible browser client
+ */
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_URL')
-}
+import { supabase } from './supabase-browser'
+import { authLogger } from './logger'
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY')
-}
+// Re-export the supabase client
+export { supabase }
 
-// Create Supabase client for frontend use
-// This client respects RLS policies and is used for user authentication
-export const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    }
-  }
-)
-
-// Auth helper functions
+// Auth helper functions (updated to use structured logging)
 export const auth = {
   // Sign up with role
   signUp: async (email: string, password: string, userData: {
@@ -32,26 +18,56 @@ export const auth = {
     company_name?: string,
     shop_domain?: string
   }) => {
-    return await supabase.auth.signUp({
+    authLogger.info('Starting user registration', { email, role: userData.role })
+    
+    const result = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: userData
       }
     })
+
+    if (result.error) {
+      authLogger.error('Registration failed', result.error, { email })
+    } else {
+      authLogger.info('Registration successful', { email, userId: result.data.user?.id })
+    }
+
+    return result
   },
 
   // Sign in
   signIn: async (email: string, password: string) => {
-    return await supabase.auth.signInWithPassword({
+    authLogger.info('Starting user login', { email })
+    
+    const result = await supabase.auth.signInWithPassword({
       email,
       password
     })
+
+    if (result.error) {
+      authLogger.error('Login failed', result.error, { email })
+    } else {
+      authLogger.info('Login successful', { email, userId: result.data.user?.id })
+    }
+
+    return result
   },
 
   // Sign out
   signOut: async () => {
-    return await supabase.auth.signOut()
+    authLogger.info('Starting user logout')
+    
+    const result = await supabase.auth.signOut()
+    
+    if (result.error) {
+      authLogger.error('Logout failed', result.error)
+    } else {
+      authLogger.info('Logout successful')
+    }
+    
+    return result
   },
 
   // Get current user
@@ -68,8 +84,46 @@ export const auth = {
 
   // Get user profile with role
   getUserProfile: async () => {
+    authLogger.debug('Fetching user profile')
+    
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+    authLogger.debug('Current user retrieved', { userId: user?.id, email: user?.email })
+    
+    if (!user) {
+      authLogger.debug('No user found, returning null')
+      return null
+    }
+
+    authLogger.debug('Querying users table', { userId: user.id })
+    
+    const { data: profile, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+
+    if (error) {
+      authLogger.error('Failed to fetch user profile', error, { userId: user.id })
+      return null
+    }
+
+    if (!profile) {
+      authLogger.warn('No profile found in database', { userId: user.id })
+      return null
+    }
+
+    authLogger.debug('User profile retrieved successfully', { userId: user.id, role: profile.role })
+    return profile
+  },
+
+  // Get user profile for a specific user (avoids circular dependency)
+  getUserProfileForUser: async (user: any) => {
+    authLogger.debug('Fetching profile for specific user', { userId: user?.id })
+    
+    if (!user) {
+      authLogger.debug('No user provided, returning null')
+      return null
+    }
 
     const { data: profile, error } = await supabase
       .from('users')
@@ -78,15 +132,22 @@ export const auth = {
       .single()
 
     if (error) {
-      console.error('Error fetching user profile:', error)
+      authLogger.error('Failed to fetch user profile for user', error, { userId: user.id })
       return null
     }
 
+    if (!profile) {
+      authLogger.warn('No profile found for user', { userId: user.id })
+      return null
+    }
+
+    authLogger.debug('Profile retrieved for user', { userId: user.id, role: profile.role })
     return profile
   },
 
   // Listen to auth changes
   onAuthStateChange: (callback: (event: string, session: any) => void) => {
+    authLogger.debug('Setting up auth state change listener')
     return supabase.auth.onAuthStateChange(callback)
   }
 }

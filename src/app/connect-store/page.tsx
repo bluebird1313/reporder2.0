@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 export default function ConnectStore() {
   const [shopDomain, setShopDomain] = useState('');
   const [platform, setPlatform] = useState<'shopify' | 'lightspeed'>('shopify');
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+
 
   const handleConnect = async () => {
     if (!shopDomain.trim()) {

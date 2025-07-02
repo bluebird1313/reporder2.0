@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import RoleSelector from '@/components/auth/RoleSelector'
+import SignUpFields from '@/components/auth/SignUpFields'
+import AuthDebugPanel from '@/components/auth/AuthDebugPanel'
+import { UserRole } from '@/lib/database.types'
 
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false)
@@ -12,24 +16,46 @@ export default function LoginPage() {
   const [fullName, setFullName] = useState('')
   const [companyName, setCompanyName] = useState('')
   const [shopDomain, setShopDomain] = useState('')
-  const [role, setRole] = useState<'company' | 'rep'>('rep')
+  const [role, setRole] = useState<UserRole>('rep')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const { signIn, signUp, user, profile } = useAuth()
+  const { signIn, signUp, user, profile, loading: authLoading } = useAuth()
   const router = useRouter()
 
-  // Redirect if already logged in
+  // Redirect if already logged in - ONLY redirect based on actual user profile
   useEffect(() => {
-    if (user && profile) {
-      if (profile.role === 'company') {
-        router.push('/dashboard/company')
-      } else if (profile.role === 'rep') {
-        router.push('/dashboard/rep')
-      }
+    console.log('🔍 LOGIN PAGE - Auth state change detected:', { 
+      user: !!user, 
+      userId: user?.id,
+      profile: profile?.role, 
+      authLoading,
+      currentLoading: loading,
+      timestamp: new Date().toISOString()
+    })
+    
+    if (user && profile && !authLoading) {
+      console.log('✅ LOGIN PAGE - All conditions met for redirect:', {
+        hasUser: !!user,
+        hasProfile: !!profile,
+        profileRole: profile.role,
+        authLoadingDone: !authLoading
+      })
+      const redirectPath = profile.role === 'company' ? '/dashboard/company' : '/dashboard/rep'
+      console.log('🔄 LOGIN PAGE - Redirecting to:', redirectPath)
+      router.push(redirectPath)
+    } else if (user && !profile && !authLoading) {
+      console.log('❌ LOGIN PAGE - User exists but no profile found - this should not happen')
+      setError('User profile not found. Please contact support.')
+    } else {
+      console.log('⏳ LOGIN PAGE - Waiting for conditions:', {
+        needsUser: !user,
+        needsProfile: !profile,
+        waitingForAuth: authLoading
+      })
     }
-  }, [user, profile, router])
+  }, [user, profile, authLoading, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,12 +82,13 @@ export default function LoginPage() {
           setSuccess('Account created successfully! Please check your email to verify your account.')
         }
       } else {
+        // Sign in - let the useEffect handle the redirect based on actual user profile
         const { error: signInError } = await signIn(email, password)
         
         if (signInError) {
           setError(signInError.message)
         }
-        // Redirect will happen automatically via useEffect when user state updates
+        // DO NOT manually redirect here - let useEffect handle it based on actual profile
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -87,6 +114,9 @@ export default function LoginPage() {
     resetForm()
   }
 
+  // Show loading state if user exists but we're still loading profile
+  const isAuthenticating = (user && !profile && authLoading) || loading
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -97,6 +127,23 @@ export default function LoginPage() {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           {isSignUp ? 'Create your account' : 'Sign in to your account'}
         </h2>
+        
+        {/* Show authentication status */}
+        {isAuthenticating && (
+          <div className="mt-4 text-center">
+            <div className="text-sm text-blue-600">
+              {user && !profile ? 'Loading your profile...' : 'Signing you in...'}
+            </div>
+          </div>
+        )}
+        
+        <AuthDebugPanel 
+          user={user}
+          profile={profile}
+          authLoading={authLoading}
+          loading={loading}
+          isAuthenticating={isAuthenticating}
+        />
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -114,89 +161,23 @@ export default function LoginPage() {
           )}
 
           <form className="space-y-6" onSubmit={handleSubmit}>
+            <RoleSelector 
+              role={role}
+              isSignUp={isSignUp}
+              disabled={isAuthenticating}
+              onChange={setRole}
+            />
+
             {isSignUp && (
-              <>
-                {/* Role Selection */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700">
-                    I am a:
-                  </label>
-                  <div className="mt-2 space-y-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        value="company"
-                        checked={role === 'company'}
-                        onChange={(e) => setRole(e.target.value as 'company' | 'rep')}
-                        className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">
-                        Store Owner/Company
-                      </span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        value="rep"
-                        checked={role === 'rep'}
-                        onChange={(e) => setRole(e.target.value as 'company' | 'rep')}
-                        className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">
-                        Sales Representative
-                      </span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Full Name */}
-                <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                    Full Name
-                  </label>
-                  <input
-                    id="fullName"
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                {/* Company-specific fields */}
-                {role === 'company' && (
-                  <>
-                    <div>
-                      <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
-                        Company Name
-                      </label>
-                      <input
-                        id="companyName"
-                        type="text"
-                        value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
-                        required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="shopDomain" className="block text-sm font-medium text-gray-700">
-                        Shop Domain
-                      </label>
-                      <input
-                        id="shopDomain"
-                        type="text"
-                        value={shopDomain}
-                        onChange={(e) => setShopDomain(e.target.value)}
-                        placeholder="your-store.myshopify.com"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                  </>
-                )}
-              </>
+              <SignUpFields
+                role={role}
+                fullName={fullName}
+                companyName={companyName}
+                shopDomain={shopDomain}
+                onFullNameChange={setFullName}
+                onCompanyNameChange={setCompanyName}
+                onShopDomainChange={setShopDomain}
+              />
             )}
 
             {/* Email */}
@@ -248,10 +229,18 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isAuthenticating}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Loading...' : (isSignUp ? 'Sign up' : 'Sign in')}
+                {isAuthenticating ? (
+                  <div className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {user && !profile ? 'Loading profile...' : 'Signing in...'}
+                  </div>
+                ) : (isSignUp ? 'Sign up' : `Sign in as ${role === 'rep' ? 'Sales Rep' : 'Store Owner'}`)}
               </button>
             </div>
 
@@ -260,7 +249,8 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={toggleMode}
-                className="text-sm text-blue-600 hover:text-blue-500"
+                disabled={isAuthenticating}
+                className="text-sm text-blue-600 hover:text-blue-500 disabled:opacity-50"
               >
                 {isSignUp 
                   ? 'Already have an account? Sign in' 
