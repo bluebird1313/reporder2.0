@@ -1,36 +1,36 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
 export default function ConnectStore() {
-  const [shopDomain, setShopDomain] = useState('');
-  const [platform, setPlatform] = useState<'shopify' | 'lightspeed'>('shopify');
-  const [isLoading, setIsLoading] = useState(false);
+  const [shopDomain, setShopDomain] = useState('')
+  const [platform, setPlatform] = useState<'shopify' | 'lightspeed'>('shopify')
+  const [isLoading, setIsLoading] = useState(false)
 
 
   const handleConnect = async () => {
     if (!shopDomain.trim()) {
-      alert('Please enter a shop domain');
-      return;
+      alert('Please enter a shop domain')
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
     
     try {
       if (platform === 'shopify') {
         // Redirect to Shopify OAuth start
-        window.location.href = `/api/oauth/shopify/start?shop=${shopDomain}`;
+        window.location.href = `/api/oauth/shopify/start?shop=${shopDomain}`
       } else {
         // Placeholder for Lightspeed OAuth (to be implemented)
-        alert('Lightspeed integration coming soon!');
-        setIsLoading(false);
+        alert('Lightspeed integration coming soon!')
+        setIsLoading(false)
       }
     } catch (error) {
-      console.error('Connection error:', error);
-      alert('Failed to connect. Please try again.');
-      setIsLoading(false);
+      console.error('Connection error:', error)
+      alert('Failed to connect. Please try again.')
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -120,5 +120,5 @@ export default function ConnectStore() {
         </div>
       </div>
     </div>
-  );
+  )
 } 

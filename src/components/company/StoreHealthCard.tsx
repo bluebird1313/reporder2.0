@@ -1,41 +1,41 @@
-"use client";
-import clsx from "clsx";
-import { CheckCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+'use client'
+import { CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid'
+import clsx from 'clsx'
 
 export interface StoreHealthCardProps {
-  status: "connected" | "disconnected" | "error";
+  status: 'connected' | 'disconnected' | 'error';
   lastSync?: string;
   className?: string;
 }
 
-const statusStyles: Record<StoreHealthCardProps["status"], {
+const statusStyles: Record<StoreHealthCardProps['status'], {
   color: string;
   label: string;
   Icon: typeof CheckCircleIcon;
 }> = {
   connected: {
-    color: "text-green-600",
-    label: "Connected",
+    color: 'text-green-600',
+    label: 'Connected',
     Icon: CheckCircleIcon,
   },
   disconnected: {
-    color: "text-gray-400",
-    label: "Disconnected",
+    color: 'text-gray-400',
+    label: 'Disconnected',
     Icon: ExclamationTriangleIcon,
   },
   error: {
-    color: "text-red-500",
-    label: "Error",
+    color: 'text-red-500',
+    label: 'Error',
     Icon: ExclamationTriangleIcon,
   },
-};
+}
 
 export default function StoreHealthCard({ status, lastSync, className }: StoreHealthCardProps) {
-  const { color, label, Icon } = statusStyles[status];
+  const { color, label, Icon } = statusStyles[status]
   return (
-    <div className={clsx("rounded-lg border p-4 bg-white shadow-sm", className)}>
+    <div className={clsx('rounded-lg border p-4 bg-white shadow-sm', className)}>
       <div className="flex items-center space-x-3">
-        <Icon className={clsx("h-6 w-6", color)} />
+        <Icon className={clsx('h-6 w-6', color)} />
         <div>
           <h2 className="text-sm font-medium">Store Connection</h2>
           <p className="text-xs text-gray-600">
@@ -47,5 +47,5 @@ export default function StoreHealthCard({ status, lastSync, className }: StoreHe
         </div>
       </div>
     </div>
-  );
+  )
 } 

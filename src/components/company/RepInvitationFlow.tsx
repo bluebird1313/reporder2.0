@@ -1,13 +1,13 @@
-"use client";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import clsx from "clsx";
+'use client'
+import { zodResolver } from '@hookform/resolvers/zod'
+import clsx from 'clsx'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const schema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  permission: z.enum(["full", "limited", "collection_only"]),
-});
+  email: z.string().email({ message: 'Invalid email address' }),
+  permission: z.enum(['full', 'limited', 'collection_only']),
+})
 
 type FormValues = z.infer<typeof schema>;
 
@@ -21,19 +21,19 @@ export default function RepInvitationFlow({ className }: RepInvitationFlowProps)
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { permission: "limited" } });
+  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { permission: 'limited' } })
 
   const onSubmit = async (values: FormValues) => {
-    await fetch("/api/permissions/grant", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    await fetch('/api/permissions/grant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(values),
-    });
-    reset();
-  };
+    })
+    reset()
+  }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={clsx("space-y-4", className)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={clsx('space-y-4', className)}>
       <h2 className="text-sm font-medium">Invite Rep</h2>
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="flex-1">
@@ -41,16 +41,16 @@ export default function RepInvitationFlow({ className }: RepInvitationFlowProps)
             type="email"
             placeholder="Rep email"
             className={clsx(
-              "w-full rounded-md border px-3 py-2 text-sm",
-              errors.email ? "border-red-500" : "border-gray-300"
+              'w-full rounded-md border px-3 py-2 text-sm',
+              errors.email ? 'border-red-500' : 'border-gray-300',
             )}
-            {...register("email")}
+            {...register('email')}
           />
           {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email.message}</p>}
         </div>
         <select
           className="rounded-md border border-gray-300 px-3 py-2 text-sm"
-          {...register("permission")}
+          {...register('permission')}
         >
           <option value="full">Full</option>
           <option value="limited">Limited</option>
@@ -65,5 +65,5 @@ export default function RepInvitationFlow({ className }: RepInvitationFlowProps)
         </button>
       </div>
     </form>
-  );
+  )
 } 

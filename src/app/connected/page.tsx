@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation'
 
 export default function Connected() {
-  const searchParams = useSearchParams();
-  const shop = searchParams?.get('shop');
+  const searchParams = useSearchParams()
+  const shop = searchParams?.get('shop')
 
 
   const handleViewDashboard = () => {
     // Navigate to main dashboard (to be implemented)
-    window.location.href = '/dashboard';
-  };
+    window.location.href = '/dashboard'
+  }
 
   const handleConnectAnother = () => {
-    window.location.href = '/connect-store';
-  };
+    window.location.href = '/connect-store'
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -92,5 +92,5 @@ export default function Connected() {
         </div>
       </div>
     </div>
-  );
+  )
 } 

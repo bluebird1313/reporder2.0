@@ -1,5 +1,6 @@
-import 'dotenv/config';         // 1-liner autoload
+import 'dotenv/config'         // 1-liner autoload
 import { createClient } from '@supabase/supabase-js'
+
 import type { Database } from './database.types'
 
 if (!process.env.SUPABASE_URL) {
@@ -18,7 +19,7 @@ export const supabaseAdmin = createClient<Database>(
   {
     auth: {
       autoRefreshToken: false,
-      persistSession: false
-    }
-  }
+      persistSession: false,
+    },
+  },
 ) 

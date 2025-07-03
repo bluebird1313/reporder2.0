@@ -1,5 +1,6 @@
 'use client'
 import { User } from '@supabase/supabase-js'
+
 import { Database } from '@/lib/database.types'
 
 type UserProfile = Database['public']['Tables']['users']['Row']
@@ -17,7 +18,7 @@ export default function AuthDebugPanel({
   profile, 
   authLoading, 
   loading, 
-  isAuthenticating 
+  isAuthenticating, 
 }: AuthDebugPanelProps) {
   if (process.env.NODE_ENV !== 'development') {
     return null

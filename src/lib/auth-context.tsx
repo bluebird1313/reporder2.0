@@ -1,9 +1,10 @@
 'use client'
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { auth } from './supabase'
-import { authLogger } from './logger'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+
 import { Database } from './database.types'
+import { authLogger } from './logger'
+import { auth } from './supabase'
 
 type UserProfile = Database['public']['Tables']['users']['Row']
 
@@ -131,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     isCompany: profile?.role === 'company',
-    isRep: profile?.role === 'rep'
+    isRep: profile?.role === 'rep',
   }
 
   // Log auth context state for debugging (development only)
@@ -140,7 +141,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       hasUser: !!user, 
       hasProfile: !!profile, 
       profileRole: profile?.role,
-      loading 
+      loading, 
     })
   }
 

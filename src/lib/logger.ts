@@ -33,7 +33,7 @@ class Logger {
     level: LogLevel,
     message: string,
     context?: LogContext,
-    error?: Error
+    error?: Error,
   ): LogEntry {
     return {
       timestamp: this.getTimestamp(),
@@ -68,7 +68,7 @@ class Logger {
 
       console.groupCollapsed(
         `%c${emoji} [${level.toUpperCase()}] ${message}`,
-        color
+        color,
       )
 
       if (context) {

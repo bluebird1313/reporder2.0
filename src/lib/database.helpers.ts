@@ -1,11 +1,11 @@
-import { supabaseAdmin } from './supabaseAdmin'
 import type { 
   OAuthState, 
   OAuthStateInsert, 
   RetailerToken, 
   RetailerTokenInsert,
-  Platform 
+  Platform, 
 } from './database.types'
+import { supabaseAdmin } from './supabaseAdmin'
 
 /**
  * OAuth State Management
@@ -20,7 +20,7 @@ export class OAuthStateManager {
       .from('oauth_states')
       .insert({
         state,
-        shop_domain: shopDomain
+        shop_domain: shopDomain,
       })
       .select()
       .single()
@@ -77,9 +77,9 @@ export class RetailerTokenManager {
       .from('retailer_tokens')
       .upsert({
         ...token,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       }, {
-        onConflict: 'platform,shop_domain'
+        onConflict: 'platform,shop_domain',
       })
       .select()
       .single()
@@ -191,7 +191,7 @@ export class RetailerTokenManager {
 
     const result: Record<Platform, string[]> = {
       shopify: [],
-      lightspeed: []
+      lightspeed: [],
     }
 
     data?.forEach(token => {

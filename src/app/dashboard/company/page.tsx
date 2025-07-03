@@ -1,32 +1,34 @@
-"use client";
+'use client'
 
-import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/lib/auth-context";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import StoreHealthCard from "../../../components/company/StoreHealthCard";
-import PermissionMatrix from "../../../components/company/PermissionMatrix";
-import ProductCollectionSelector from "../../../components/company/ProductCollectionSelector";
-import RepInvitationFlow from "../../../components/company/RepInvitationFlow";
-import AnalyticsOverview from "../../../components/company/AnalyticsOverview";
+import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
+import { useAuth } from '@/lib/auth-context'
+
+import AnalyticsOverview from '../../../components/company/AnalyticsOverview'
+import PermissionMatrix from '../../../components/company/PermissionMatrix'
+import ProductCollectionSelector from '../../../components/company/ProductCollectionSelector'
+import RepInvitationFlow from '../../../components/company/RepInvitationFlow'
+import StoreHealthCard from '../../../components/company/StoreHealthCard'
 
 export default function CompanyDashboard() {
-  const { user, profile, loading, signOut } = useAuth();
-  const router = useRouter();
+  const { user, profile, loading, signOut } = useAuth()
+  const router = useRouter()
 
   // Redirect if not authenticated or not a company user
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        router.push('/login');
-        return;
+        router.push('/login')
+        return
       }
       if (profile && profile.role !== 'company') {
-        router.push('/login?message=rep-dashboard-separate');
-        return;
+        router.push('/login?message=rep-dashboard-separate')
+        return
       }
     }
-  }, [user, profile, loading, router]);
+  }, [user, profile, loading, router])
 
   // Show loading while checking auth
   if (loading || !user || !profile) {
@@ -34,7 +36,7 @@ export default function CompanyDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
-    );
+    )
   }
 
   // Show access denied if wrong role
@@ -52,21 +54,27 @@ export default function CompanyDashboard() {
           </button>
         </div>
       </div>
-    );
+    )
   }
   const { data, isLoading, error } = useQuery({
-    queryKey: ["company-dashboard"],
+    queryKey: ['company-dashboard'],
     queryFn: async () => {
-      const res = await fetch("/api/dashboard/store-owner/me");
-      if (!res.ok) throw new Error("Failed to load dashboard");
-      return res.json();
+      const res = await fetch('/api/dashboard/store-owner/me')
+      if (!res.ok) {
+throw new Error('Failed to load dashboard')
+}
+      return res.json()
     },
-  });
+  })
 
-  if (isLoading) return <p className="p-6 text-sm">Loading dashboard...</p>;
-  if (error) return <p className="p-6 text-red-500 text-sm">{(error as Error).message}</p>;
+  if (isLoading) {
+return <p className="p-6 text-sm">Loading dashboard...</p>
+}
+  if (error) {
+return <p className="p-6 text-red-500 text-sm">{(error).message}</p>
+}
 
-  const { storeStatus, reps, collections, permissions, analytics } = data;
+  const { storeStatus, reps, collections, permissions, analytics } = data
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -97,5 +105,5 @@ export default function CompanyDashboard() {
         <AnalyticsOverview data={analytics} className="" />
       </div>
     </div>
-  );
+  )
 } 

@@ -1,5 +1,5 @@
-"use client";
-import clsx from "clsx";
+'use client'
+import clsx from 'clsx'
 
 export interface AnalyticsData {
   sharedValue: number;
@@ -14,7 +14,7 @@ export interface AnalyticsOverviewProps {
 
 export default function AnalyticsOverview({ data, className }: AnalyticsOverviewProps) {
   return (
-    <div className={clsx("rounded-lg border bg-white p-4 shadow-sm", className)}>
+    <div className={clsx('rounded-lg border bg-white p-4 shadow-sm', className)}>
       <h2 className="text-sm font-medium mb-4">Sharing Analytics</h2>
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -38,5 +38,5 @@ export default function AnalyticsOverview({ data, className }: AnalyticsOverview
         </ul>
       </div>
     </div>
-  );
+  )
 } 

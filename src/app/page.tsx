@@ -1,8 +1,9 @@
 'use client'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
 import { useAuth } from '@/lib/auth-context'
 
 export default function Home() {

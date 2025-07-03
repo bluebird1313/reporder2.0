@@ -1,5 +1,5 @@
-"use client";
-import clsx from "clsx";
+'use client'
+import clsx from 'clsx'
 
 export interface CollectionItem {
   id: string;
@@ -17,22 +17,22 @@ export interface ProductCollectionSelectorProps {
 
 export default function ProductCollectionSelector({ collections, selectedIds = [], onChange, className }: ProductCollectionSelectorProps) {
   const toggle = (id: string) => {
-    const next = selectedIds.includes(id) ? selectedIds.filter((i) => i !== id) : [...selectedIds, id];
-    onChange?.(next);
-  };
+    const next = selectedIds.includes(id) ? selectedIds.filter((i) => i !== id) : [...selectedIds, id]
+    onChange?.(next)
+  }
 
   return (
-    <div className={clsx("space-y-2", className)}>
+    <div className={clsx('space-y-2', className)}>
       <h2 className="text-sm font-medium">Product Collections</h2>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {collections.map((col) => {
-          const checked = selectedIds.includes(col.id);
+          const checked = selectedIds.includes(col.id)
           return (
             <label
               key={col.id}
               className={clsx(
-                "relative cursor-pointer rounded-lg border bg-white p-3 shadow-sm hover:shadow-md transition",
-                checked ? "ring-2 ring-blue-500" : ""
+                'relative cursor-pointer rounded-lg border bg-white p-3 shadow-sm hover:shadow-md transition',
+                checked ? 'ring-2 ring-blue-500' : '',
               )}
             >
               <input
@@ -53,9 +53,9 @@ export default function ProductCollectionSelector({ collections, selectedIds = [
                 <p className="text-xs text-gray-500">{col.productsCount} products</p>
               </div>
             </label>
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 } 

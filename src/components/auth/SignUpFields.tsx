@@ -18,7 +18,7 @@ export default function SignUpFields({
   shopDomain,
   onFullNameChange,
   onCompanyNameChange,
-  onShopDomainChange
+  onShopDomainChange,
 }: SignUpFieldsProps) {
   return (
     <>

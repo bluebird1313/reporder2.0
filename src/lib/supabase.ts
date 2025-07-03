@@ -3,8 +3,8 @@
  * Uses new SSR-compatible browser client
  */
 
-import { supabase } from './supabase-browser'
 import { authLogger } from './logger'
+import { supabase } from './supabase-browser'
 
 // Re-export the supabase client
 export { supabase }
@@ -24,8 +24,8 @@ export const auth = {
       email,
       password,
       options: {
-        data: userData
-      }
+        data: userData,
+      },
     })
 
     if (result.error) {
@@ -43,7 +43,7 @@ export const auth = {
     
     const result = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     })
 
     if (result.error) {
@@ -149,7 +149,7 @@ export const auth = {
   onAuthStateChange: (callback: (event: string, session: any) => void) => {
     authLogger.debug('Setting up auth state change listener')
     return supabase.auth.onAuthStateChange(callback)
-  }
+  },
 }
 
 // User role checks
@@ -167,5 +167,5 @@ export const userRoles = {
   getRole: async () => {
     const profile = await auth.getUserProfile()
     return profile?.role || null
-  }
+  },
 } 

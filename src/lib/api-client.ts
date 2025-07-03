@@ -3,8 +3,8 @@
  * Provides basic error handling and consistent response formatting
  */
 
-import { supabase } from './supabase'
 import { apiLogger } from './logger'
+import { supabase } from './supabase'
 
 // Response wrapper for consistent API responses
 export interface ApiResponse<T = unknown> {
@@ -19,7 +19,7 @@ export interface ApiResponse<T = unknown> {
  */
 function createResponse<T>(
   data: T | null,
-  error: string | null = null
+  error: string | null = null,
 ): ApiResponse<T> {
   return {
     data,

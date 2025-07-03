@@ -56,7 +56,7 @@ export function useDebounce<T>(value: T, delay?: number): T {
 export function useDebounceCallback<T extends (...args: any[]) => any>(
   callback: T,
   delay: number,
-  deps: React.DependencyList
+  deps: React.DependencyList,
 ): T {
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null)
 
@@ -111,7 +111,7 @@ export function useDebounceCallback<T extends (...args: any[]) => any>(
  */
 export function useAsyncDebounce<T extends (...args: any[]) => Promise<any>>(
   asyncFn: T,
-  delay: number
+  delay: number,
 ) {
   const [isLoading, setIsLoading] = useState(false)
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null)
@@ -176,6 +176,6 @@ export function useAsyncDebounce<T extends (...args: any[]) => Promise<any>>(
         setAbortController(null)
       }
       setIsLoading(false)
-    }
+    },
   }
 } 

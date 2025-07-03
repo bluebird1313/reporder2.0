@@ -42,11 +42,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "dashboard_users_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'dashboard_users_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -80,18 +80,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "inventory_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: 'inventory_product_id_fkey'
+            columns: ['product_id']
             isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
+            referencedRelation: 'products'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "inventory_store_id_fkey"
-            columns: ["store_id"]
+            foreignKeyName: 'inventory_store_id_fkey'
+            columns: ['store_id']
             isOneToOne: false
-            referencedRelation: "stores"
-            referencedColumns: ["id"]
+            referencedRelation: 'stores'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -128,18 +128,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "low_stock_alerts_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: 'low_stock_alerts_product_id_fkey'
+            columns: ['product_id']
             isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
+            referencedRelation: 'products'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "low_stock_alerts_store_id_fkey"
-            columns: ["store_id"]
+            foreignKeyName: 'low_stock_alerts_store_id_fkey'
+            columns: ['store_id']
             isOneToOne: false
-            referencedRelation: "stores"
-            referencedColumns: ["id"]
+            referencedRelation: 'stores'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -392,18 +392,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "sales_performance_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: 'sales_performance_product_id_fkey'
+            columns: ['product_id']
             isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
+            referencedRelation: 'products'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "sales_performance_store_id_fkey"
-            columns: ["store_id"]
+            foreignKeyName: 'sales_performance_store_id_fkey'
+            columns: ['store_id']
             isOneToOne: false
-            referencedRelation: "stores"
-            referencedColumns: ["id"]
+            referencedRelation: 'stores'
+            referencedColumns: ['id']
           }
         ]
       }
@@ -513,29 +513,29 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, 'public'>]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+        Database[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+      Database[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -544,21 +544,21 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -567,21 +567,21 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U

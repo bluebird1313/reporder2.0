@@ -1,7 +1,8 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
-import { Providers } from '../lib/providers'
+
 import ErrorBoundary from '../components/ErrorBoundary'
+import { Providers } from '../lib/providers'
 
 const inter = Inter({ subsets: ['latin'] })
 

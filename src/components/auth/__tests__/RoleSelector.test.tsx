@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+
 import RoleSelector from '../RoleSelector'
 
 describe('RoleSelector', () => {

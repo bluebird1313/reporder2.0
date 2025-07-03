@@ -1,5 +1,5 @@
-"use client";
-import clsx from "clsx";
+'use client'
+import clsx from 'clsx'
 
 export interface Rep {
   id: string;
@@ -11,7 +11,7 @@ export interface Collection {
   name: string;
 }
 
-export type PermissionLevel = "none" | "read" | "write";
+export type PermissionLevel = 'none' | 'read' | 'write';
 
 export interface PermissionMatrixProps {
   reps: Rep[];
@@ -22,7 +22,7 @@ export interface PermissionMatrixProps {
 
 export default function PermissionMatrix({ reps, collections, permissions, className }: PermissionMatrixProps) {
   return (
-    <div className={clsx("overflow-x-auto rounded-lg border", className)}>
+    <div className={clsx('overflow-x-auto rounded-lg border', className)}>
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -41,28 +41,28 @@ export default function PermissionMatrix({ reps, collections, permissions, class
                 {rep.name}
               </td>
               {collections.map((col) => {
-                const level = permissions[rep.id]?.[col.id] ?? "none";
+                const level = permissions[rep.id]?.[col.id] ?? 'none'
                 return (
                   <td key={col.id} className="px-4 py-2 text-center text-sm">
-                    {level !== "none" ? (
+                    {level !== 'none' ? (
                       <span
                         className={clsx(
-                          "inline-block h-3 w-3 rounded-full",
-                          level === "read" && "bg-yellow-400",
-                          level === "write" && "bg-green-500"
+                          'inline-block h-3 w-3 rounded-full',
+                          level === 'read' && 'bg-yellow-400',
+                          level === 'write' && 'bg-green-500',
                         )}
                         aria-label={level}
                       />
                     ) : (
-                      "—"
+                      '—'
                     )}
                   </td>
-                );
+                )
               })}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
+  )
 } 

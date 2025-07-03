@@ -1,11 +1,12 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/auth-context'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+
+import AuthDebugPanel from '@/components/auth/AuthDebugPanel'
 import RoleSelector from '@/components/auth/RoleSelector'
 import SignUpFields from '@/components/auth/SignUpFields'
-import AuthDebugPanel from '@/components/auth/AuthDebugPanel'
+import { useAuth } from '@/lib/auth-context'
 import { UserRole } from '@/lib/database.types'
 
 export default function LoginPage() {
@@ -42,7 +43,7 @@ export default function LoginPage() {
       profile: profile?.role, 
       authLoading,
       currentLoading: loading,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     })
     
     if (user && profile && !authLoading) {
@@ -50,7 +51,7 @@ export default function LoginPage() {
         hasUser: !!user,
         hasProfile: !!profile,
         profileRole: profile.role,
-        authLoadingDone: !authLoading
+        authLoadingDone: !authLoading,
       })
       const redirectPath = profile.role === 'company' ? '/dashboard/company' : '/login?message=rep-dashboard-separate'
       console.log('🔄 LOGIN PAGE - Redirecting to:', redirectPath)
@@ -62,7 +63,7 @@ export default function LoginPage() {
       console.log('⏳ LOGIN PAGE - Waiting for conditions:', {
         needsUser: !user,
         needsProfile: !profile,
-        waitingForAuth: authLoading
+        waitingForAuth: authLoading,
       })
     }
   }, [user, profile, authLoading, router])
@@ -80,8 +81,8 @@ export default function LoginPage() {
           full_name: fullName,
           ...(role === 'company' && { 
             company_name: companyName,
-            shop_domain: shopDomain 
-          })
+            shop_domain: shopDomain, 
+          }),
         }
 
         const { error: signUpError } = await signUp(email, password, userData)

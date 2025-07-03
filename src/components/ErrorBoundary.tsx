@@ -1,6 +1,6 @@
 'use client'
-import { Component, ErrorInfo, ReactNode } from 'react'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
+import { Component, ErrorInfo, ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
@@ -36,7 +36,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     })
 
     // In production, send error to monitoring service
